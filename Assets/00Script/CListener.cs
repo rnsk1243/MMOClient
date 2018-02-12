@@ -54,14 +54,14 @@ public class CListener
         return mInstance;
     }
 
-    public MyTransform GetTrMessage()
-    {
-        if (0 != mTrQueue.Count)
-        {
-            return mTrQueue.Dequeue();
-        }
-        return null;
-    }
+    //public MyTransform GetTrMessage()
+    //{
+    //    if (0 != mTrQueue.Count)
+    //    {
+    //        return mTrQueue.Dequeue();
+    //    }
+    //    return null;
+    //}
 
 
 

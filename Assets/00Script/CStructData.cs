@@ -19,11 +19,30 @@ public struct DataPacketInfo
     public MyTransform Tr;
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = ConstValueInfo.ChatBufSize)]
     public string ChatMessage;
-    //public DataPacketInfo(int infoProtocol, MyTransform tr)
-    //{
-    //    InfoProtocol = infoProtocol;
-    //    Tr = tr;
-    //}
+
+    public DataPacketInfo(int infoProtocol, MyTransform tr, string chatMessage)
+    {
+        InfoProtocol = infoProtocol;
+        Tr = tr;
+        ChatMessage = chatMessage;
+    }
+
+    public byte[] Serialize()
+    {
+        // allocate a byte array for the struct data
+        var buffer = new byte[Marshal.SizeOf(typeof(DataPacketInfo))];
+
+        // Allocate a GCHandle and get the array pointer
+        var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+        var pBuffer = gch.AddrOfPinnedObject();
+
+        // copy data from struct to array and unpin the gc pointer
+        Marshal.StructureToPtr(this, pBuffer, false);
+        
+        gch.Free();
+
+        return buffer;
+    }
 
     public void DeserializeData(ref byte[] data)
     {
@@ -71,11 +90,15 @@ public struct DataPacketInfo
 
 }
 
-public class MyTransform
+[StructLayout(LayoutKind.Explicit, Size = 36, Pack = 1)]
+public struct MyTransform
 {
-   public MyVector3 Position;
-   public MyVector3 Rotation;
-   public MyVector3 Scale;
+    [FieldOffset(0)]
+    public MyVector3 Position;
+    [FieldOffset(12)]
+    public MyVector3 Rotation;
+    [FieldOffset(24)]
+    public MyVector3 Scale;
 
     public MyTransform(MyVector3 pos, MyVector3 rot, MyVector3 sca)
     {
@@ -85,11 +108,15 @@ public class MyTransform
     }
 }
 
+[StructLayout(LayoutKind.Explicit, Size = 12, Pack =1)]
 public struct MyVector3
 {
+    [FieldOffset(0)]
    public float x;
-   public float y;
-   public float z;
+    [FieldOffset(4)]
+    public float y;
+    [FieldOffset(8)]
+    public float z;
 
     public MyVector3(float _x, float _y, float _z)
     {
