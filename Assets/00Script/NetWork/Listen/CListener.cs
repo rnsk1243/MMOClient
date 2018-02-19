@@ -15,11 +15,13 @@ public class CListener
     private NetworkStream mStream;
     private CConnect mConnect;
     private Queue<MyTransform> mTrQueue;
+    private Dictionary<string, int> mCommandValue;
     ///
 
     private CListener()
     {
         mTrQueue = new Queue<MyTransform>();
+        mCommandValue = new Dictionary<string, int>();
         mConnect = CConnect.GetInstance();
         mStream = mConnect.GetStream();
         mThreadListen = new Thread(new ThreadStart(Listen));
@@ -52,6 +54,17 @@ public class CListener
             mInstance = new CListener();
         }
         return mInstance;
+    }
+
+    public int GetRequestVal(string request)
+    {
+        int returnVal = ConstValueInfo.WrongValue;
+        if (mCommandValue.ContainsKey(request) == true)
+        {
+             returnVal = mCommandValue[request];
+            mCommandValue.Remove(request);
+        }
+        return returnVal;
     }
 
     //public MyTransform GetTrMessage()
@@ -119,6 +132,9 @@ public class CListener
     {
         switch (dataPacket.InfoProtocol)
         {
+            case (int)ProtocolInfo.Request:
+                mCommandValue.Add(dataPacket.ChatMessage, dataPacket.RequestVal);
+                break;
             case (int)ProtocolInfo.Tr:
                 mTrQueue.Enqueue(dataPacket.Tr);
                 Debug.Log("받은 Tr : " + dataPacket.Tr.Position.x);
