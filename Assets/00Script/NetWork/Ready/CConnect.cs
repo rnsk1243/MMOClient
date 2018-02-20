@@ -37,7 +37,7 @@ public class CConnect {
         mTcpClient = new TcpClient();
         mTcpClient.Connect(mIP, mPort);
         mStream = mTcpClient.GetStream();
-        CState.GetInstance().SetConnectState(StateConnect.DistinguishCode);
+        CState.GetInstance().SetConnectState(StateConnect.SenderListenReady);
     }
     ~CConnect()
     {

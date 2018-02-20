@@ -16,6 +16,7 @@ namespace ConstValue
     public enum StateConnect
     {
         Connecting, // 연결 하는 중
+        SenderListenReady, // Sender, Listener 생성
         DistinguishCode, // 식별코드 받는 중
         //SendMyCharacter, // 내가 할 캐릭 정하여 서버에 보내는 중
         //RecvCharacter, // 서버로부터 어떤 캐릭터 생성해야하는지 받는 중

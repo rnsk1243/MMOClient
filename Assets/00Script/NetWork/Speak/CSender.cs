@@ -28,6 +28,7 @@ public class CSender {
     {
         try
         {
+          //  Debug.Log("//Sendn = " + dataPacket.InfoProtocol);
             byte[] dataBuffer = dataPacket.Serialize();
             stream.Write(dataBuffer, 0, dataBuffer.Length);
         }
