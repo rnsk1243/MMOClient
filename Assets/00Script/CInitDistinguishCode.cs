@@ -30,14 +30,16 @@ public class CInitDistinguishCode {
     {
         if(CState.GetInstance().IsCurConnectState(StateConnect.DistinguishCode) == true)
         {
-            DataPacketInfo requestMyDisCodePacket = new DataPacketInfo((int)ProtocolInfo.Request, ConstValueInfo.WrongValue, RequestCollection.SendDistinguishCode);
-            mSender.Sendn(ref requestMyDisCodePacket);
             int requestVal = mListener.GetRequestVal(RequestCollection.SendDistinguishCode);
             if (requestVal != ConstValueInfo.WrongValue)
             {
                 mMyDistinguishCode = requestVal;
                 CState.GetInstance().SetConnectState(StateConnect.AddComponent);
                 Debug.Log("나의 구분 번호 : " + mMyDistinguishCode);
+            }else
+            {
+                DataPacketInfo requestMyDisCodePacket = new DataPacketInfo((int)ProtocolInfo.Request, ConstValueInfo.WrongValue, RequestCollection.SendDistinguishCode);
+                mSender.Sendn(ref requestMyDisCodePacket); // 구분 코드 요청
             }
         }
     }

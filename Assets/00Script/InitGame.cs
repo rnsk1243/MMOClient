@@ -38,7 +38,7 @@ public class InitGame : MonoBehaviour {
         while(true)
         {
             InitializeGame();
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.3f);
         }
     }
 
@@ -48,8 +48,10 @@ public class InitGame : MonoBehaviour {
         {
             case StateConnect.Connecting:
                 mConnet = CConnect.GetInstance();
-                mListener = CListener.GetInstance();
+                break;
+            case StateConnect.SenderListenReady:
                 mSender = CSender.GetInstance();
+                mListener = CListener.GetInstance();
                 break;
             case StateConnect.DistinguishCode:
                 mInitDisCode = CInitDistinguishCode.GetInstance();

@@ -27,6 +27,7 @@ public class CListener
         mThreadListen = new Thread(new ThreadStart(Listen));
         //        Debug.Log("listen 시작");
         mThreadListen.Start();
+        CState.GetInstance().SetConnectState(StateConnect.DistinguishCode);
         //mThreadListen.Join();
     }
 
