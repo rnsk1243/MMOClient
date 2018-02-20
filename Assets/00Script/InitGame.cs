@@ -53,7 +53,7 @@ public class InitGame : MonoBehaviour {
                 break;
             case StateConnect.DistinguishCode:
                 mInitDisCode = CInitDistinguishCode.GetInstance();
-                mInitDisCode.GetMyDisCode();
+                mInitDisCode.GetMyDisCode(); 
                 break;
             case StateConnect.AddComponent:
                 Debug.Log("AddComponent State");
