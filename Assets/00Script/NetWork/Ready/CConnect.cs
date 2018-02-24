@@ -21,7 +21,7 @@ public class CConnect {
         CReader.GetInstance().LoadTextFile(ref mPortStr, ConstValueInfo.ServerPort_TextName);
         if (mIP == null)
         {
-            UnityEngine.Debug.Log("IP정보 파일 못 읽음");
+            Debug.Log("IP정보 파일 못 읽음");
             mIP = ConstValueInfo.IPAddress;
             //mIP = "192.168.200.160";
         }
@@ -31,7 +31,7 @@ public class CConnect {
         }
         else
         {
-            UnityEngine.Debug.Log("Port정보 파일 못 읽음");
+            Debug.Log("Port정보 파일 못 읽음");
             mPort = ConstValueInfo.Port;
         }
         mTcpClient = new TcpClient();
@@ -63,6 +63,11 @@ public class CConnect {
     public NetworkStream GetStream()
     {
         return mStream;
+    }
+
+    public Socket GetSocket()
+    {
+        return mTcpClient.Client;
     }
 
     public void CloseStream()

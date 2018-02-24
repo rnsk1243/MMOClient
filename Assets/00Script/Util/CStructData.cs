@@ -10,113 +10,113 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using ConstValue;
 
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-public struct DataPacketInfo
-{
-    [MarshalAs(UnmanagedType.I4)]
-    public int InfoProtocol;
-    [MarshalAs(UnmanagedType.I4)]
-    public int RequestVal;
-    [MarshalAs(UnmanagedType.Struct)]
-    public MyTransform Tr;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = ConstValueInfo.ChatBufSize)]
-    public string ChatMessage;
+//[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+//public struct DataPacketInfo
+//{
+//    [MarshalAs(UnmanagedType.I4)]
+//    public int InfoProtocol; //0
+//    [MarshalAs(UnmanagedType.I4)]
+//    public int RequestVal; //4
+//    [MarshalAs(UnmanagedType.Struct)]
+//    public MyTransform Tr; //36
+//    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = ConstValueInfo.ChatBufSize)]
+//    public string ChatMessage;
 
-    public DataPacketInfo(int infoProtocol, int requestVal, MyTransform tr, string chatMessage)
-    {
-        InfoProtocol = infoProtocol;
-        RequestVal = requestVal;
-        Tr = tr;
-        ChatMessage = chatMessage;
-    }
+//    public DataPacketInfo(int infoProtocol, int requestVal, MyTransform tr, string chatMessage)
+//    {
+//        InfoProtocol = infoProtocol;
+//        RequestVal = requestVal;
+//        Tr = tr;
+//        ChatMessage = chatMessage;
+//    }
 
-    public DataPacketInfo(int infoProtocol, int requestVal, string chatMessage)
-    {
-        InfoProtocol = infoProtocol;
-        RequestVal = requestVal;
-        Tr = new MyTransform();
-        ChatMessage = chatMessage;
-    }
+//    public DataPacketInfo(int infoProtocol, int requestVal, string chatMessage)
+//    {
+//        InfoProtocol = infoProtocol;
+//        RequestVal = requestVal;
+//        Tr = new MyTransform();
+//        ChatMessage = chatMessage;
+//    }
 
-    public DataPacketInfo(int infoProtocol)
-    {
-        InfoProtocol = infoProtocol;
-        RequestVal = ConstValueInfo.WrongValue;
-        Tr = new MyTransform();
-        ChatMessage = "";
-    }
+//    public DataPacketInfo(int infoProtocol)
+//    {
+//        InfoProtocol = infoProtocol;
+//        RequestVal = ConstValueInfo.WrongValue;
+//        Tr = new MyTransform();
+//        ChatMessage = "";
+//    }
 
-    public byte[] Serialize()
-    {
-        // allocate a byte array for the struct data
-        var buffer = new byte[Marshal.SizeOf(typeof(DataPacketInfo))];
+//    public byte[] Serialize()
+//    {
+//        // allocate a byte array for the struct data
+//        var buffer = new byte[Marshal.SizeOf(typeof(DataPacketInfo))];
 
-        // Allocate a GCHandle and get the array pointer
-        var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-        var pBuffer = gch.AddrOfPinnedObject();
+//        // Allocate a GCHandle and get the array pointer
+//        var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+//        var pBuffer = gch.AddrOfPinnedObject();
 
-        // copy data from struct to array and unpin the gc pointer
-        Marshal.StructureToPtr(this, pBuffer, false);
+//        // copy data from struct to array and unpin the gc pointer
+//        Marshal.StructureToPtr(this, pBuffer, false);
         
-        gch.Free();
+//        gch.Free();
 
-        return buffer;
-    }
+//        return buffer;
+//    }
 
-    public void DeserializeData(ref byte[] data)
-    {
-        this.InfoProtocol = BitConverter.ToInt32(data, 0);
-        Debug.Log("받은 프로토콜 : " + this.InfoProtocol);
-        switch(this.InfoProtocol)
-        {
-            case (int)ProtocolInfo.Request:
-                this.DeserializeRequest(ref data);
-                this.DeserializeChat(ref data);
-                break;
-            case (int)ProtocolInfo.Tr:
-                this.DeserializeTr(ref data);
-                break;
-            case (int)ProtocolInfo.Chat:
-                this.DeserializeChat(ref data);
-                break;
-            default:
-                break;
-        }
-    }
+//    public void DeserializeData(ref byte[] data)
+//    {
+//        this.InfoProtocol = BitConverter.ToInt32(data, 0);
+//        Debug.Log("받은 프로토콜 : " + this.InfoProtocol);
+//        switch(this.InfoProtocol)
+//        {
+//            case (int)ProtocolInfo.Request:
+//                this.DeserializeRequest(ref data);
+//                this.DeserializeChat(ref data);
+//                break;
+//            case (int)ProtocolInfo.Tr:
+//                this.DeserializeTr(ref data);
+//                break;
+//            case (int)ProtocolInfo.Chat:
+//                this.DeserializeChat(ref data);
+//                break;
+//            default:
+//                break;
+//        }
+//    }
 
-    private void DeserializeRequest(ref byte[] data)
-    {
-        this.RequestVal = BitConverter.ToInt32(data, 4);
-    }
+//    private void DeserializeRequest(ref byte[] data)
+//    {
+//        this.RequestVal = BitConverter.ToInt32(data, 4);
+//    }
 
-    private void DeserializeTr(ref byte[] data)
-    {
-       // this.InfoProtocol = BitConverter.ToInt32(data, 0);
-        MyVector3 pos = new MyVector3(
-            BitConverter.ToSingle(data, 8),
-            BitConverter.ToSingle(data, 12),
-            BitConverter.ToSingle(data, 16)
-            );
-        MyVector3 rot = new MyVector3(
-            BitConverter.ToSingle(data, 20),
-            BitConverter.ToSingle(data, 24),
-            BitConverter.ToSingle(data, 28)
-            );
-        MyVector3 sca = new MyVector3(
-            BitConverter.ToSingle(data, 32),
-            BitConverter.ToSingle(data, 36),
-            BitConverter.ToSingle(data, 40)
-            );
-        this.Tr = new MyTransform(pos, rot, sca);
-    }
+//    private void DeserializeTr(ref byte[] data)
+//    {
+//       // this.InfoProtocol = BitConverter.ToInt32(data, 0);
+//        MyVector3 pos = new MyVector3(
+//            BitConverter.ToSingle(data, 8),
+//            BitConverter.ToSingle(data, 12),
+//            BitConverter.ToSingle(data, 16)
+//            );
+//        MyVector3 rot = new MyVector3(
+//            BitConverter.ToSingle(data, 20),
+//            BitConverter.ToSingle(data, 24),
+//            BitConverter.ToSingle(data, 28)
+//            );
+//        MyVector3 sca = new MyVector3(
+//            BitConverter.ToSingle(data, 32),
+//            BitConverter.ToSingle(data, 36),
+//            BitConverter.ToSingle(data, 40)
+//            );
+//        this.Tr = new MyTransform(pos, rot, sca);
+//    }
 
-    private void DeserializeChat(ref byte[] data)
-    {
-        string chat = Encoding.Default.GetString(data, 44, ConstValueInfo.ChatBufSize);
-        this.ChatMessage = Util.RemoveNullString(ref chat);
-    }
+//    private void DeserializeChat(ref byte[] data)
+//    {
+//        string chat = Encoding.Default.GetString(data, 44, ConstValueInfo.ChatBufSize);
+//        this.ChatMessage = Util.RemoveNullString(ref chat);
+//    }
 
-}
+//}
 
 [StructLayout(LayoutKind.Explicit, Size = 36, Pack = 1)]
 public struct MyTransform
@@ -154,6 +154,56 @@ public struct MyVector3
     }
 }
 
+/// <summary>
+
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+public struct PacketTransform
+{
+    [MarshalAs(UnmanagedType.I4)]
+    public int PacketKind;
+    [MarshalAs(UnmanagedType.I4)]
+    public int InfoProtocol;
+    [MarshalAs(UnmanagedType.I4)]
+    public int DistinguishCode;
+    [MarshalAs(UnmanagedType.Struct)]
+    public MyTransform Tr;
+
+    public PacketTransform(int infoProtocol, int distinguishCode, MyTransform tr)
+    {
+        PacketKind = (int)PacketKindEnum.Transform;
+        InfoProtocol = infoProtocol;
+        DistinguishCode = distinguishCode;
+        Tr = tr;
+    }
+}
+
+// 144byte
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+public struct PacketMessage
+{
+    [MarshalAs(UnmanagedType.I4)]
+    public int PacketKind;
+    [MarshalAs(UnmanagedType.I4)]
+    public int InfoProtocol;
+    [MarshalAs(UnmanagedType.I4)]
+    public int DistinguishCode;
+    [MarshalAs(UnmanagedType.I4)]
+    public int RequestVal;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = ConstValueInfo.MessageBufSize)]
+    public string Message;
+
+    public PacketMessage(int infoProtocol, int distinguishCode, int requestVal, string message)
+    {
+        PacketKind = (int)PacketKindEnum.Message;
+        InfoProtocol = infoProtocol;
+        DistinguishCode = distinguishCode;
+        RequestVal = requestVal;
+        Message = message;
+    }
+}
+
+/// </summary>
+
 public class Util
 {
     // null 문자 제거 함수
@@ -170,5 +220,101 @@ public class Util
         }
         return strBuilder.ToString();
         //this.InfoValue = strBuilder.ToString();
+    }
+
+    public static byte[] Serialize(PacketKindEnum packetKind, object targetStruct)
+    {
+        int sendSize = 0;
+        switch(packetKind)
+        {
+            case PacketKindEnum.Transform:
+                sendSize = Marshal.SizeOf(typeof(PacketTransform));
+                break;
+            case PacketKindEnum.Message:
+                sendSize = Marshal.SizeOf(typeof(PacketMessage));
+                break;
+            default:
+                return null;
+        }
+        // allocate a byte array for the struct data
+        var buffer = new byte[sendSize];
+
+        // Allocate a GCHandle and get the array pointer
+        var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+        var pBuffer = gch.AddrOfPinnedObject();
+        //PacketMessage m = (PacketMessage)targetStruct;
+        //Debug.Log("//// SeeeSendn = " + m.Message);
+        // copy data from struct to array and unpin the gc pointer
+        Marshal.StructureToPtr(targetStruct, pBuffer, false);
+
+        gch.Free();
+        return buffer;
+    }
+
+    public static object DeserializeData(ref byte[] data, int packetKind)
+    {
+        if (data == null || packetKind == ConstValueInfo.WrongValue)
+        {
+            Debug.Log("DeserializeData 실패, data가 null이거나 packetKind가 초기화 되지 않음");
+            return null;
+        }
+        //packetKind = DeserializeInt(ref data, ConstValueInfo.StartPointPacketKind);
+        int protocolInfo = DeserializeInt(ref data, ConstValueInfo.StartPointProtocol);
+        int distinguishCode = DeserializeInt(ref data, ConstValueInfo.StartPointDistinguishCode);
+        Debug.Log("-packetKind = " + packetKind);
+        Debug.Log("-protocolInfo = " + protocolInfo);
+        Debug.Log("-distinguishCode = " + distinguishCode);
+        switch (packetKind)
+        {
+            case (int)PacketKindEnum.Transform:
+                MyTransform tr = DeserializeTr(ref data, ConstValueInfo.StartPointTr);
+                return new PacketTransform(protocolInfo, distinguishCode, tr);
+            case (int)PacketKindEnum.Message:
+                int requestVal = DeserializeInt(ref data, ConstValueInfo.StartPointRequestVal);
+                string message = DeserializeMessage(ref data, ConstValueInfo.StartPointMessage);
+                Debug.Log("requestVal = " + requestVal);
+                Debug.Log("message = " + message);
+                return new PacketMessage(protocolInfo, distinguishCode, requestVal, message);
+            default:
+                return null;
+        }
+    }
+
+    public static int DeserializeInt(ref byte[] data, int startPoint)
+    {
+        return BitConverter.ToInt32(data, startPoint);
+    }
+
+    public static MyTransform DeserializeTr(ref byte[] data, int startPoint)
+    {
+        MyVector3 pos = new MyVector3(
+            BitConverter.ToSingle(data, (startPoint)),
+            BitConverter.ToSingle(data, (startPoint + 4)),
+            BitConverter.ToSingle(data, (startPoint + 8))
+            );
+        MyVector3 rot = new MyVector3(
+            BitConverter.ToSingle(data, (startPoint + 12)),
+            BitConverter.ToSingle(data, (startPoint + 16)),
+            BitConverter.ToSingle(data, (startPoint + 20))
+            );
+        MyVector3 sca = new MyVector3(
+            BitConverter.ToSingle(data, (startPoint + 24)),
+            BitConverter.ToSingle(data, (startPoint + 28)),
+            BitConverter.ToSingle(data, (startPoint + 32))
+            );
+        return new MyTransform(pos, rot, sca);
+    }
+
+    public static string DeserializeMessage(ref byte[] data, int startPoint)
+    {
+        string chat = Encoding.Default.GetString(data, startPoint, ConstValueInfo.MessageBufSize);
+        return RemoveNullString(ref chat);
+    }
+
+    public static void RecvBufferFlush(Socket Sock)
+    {
+       // Debug.Log("RecvBuffer 비우기");
+        byte[] tempBuf = new byte[ConstValueInfo.BufSizeRecv];
+        Sock.Receive(tempBuf);
     }
 }

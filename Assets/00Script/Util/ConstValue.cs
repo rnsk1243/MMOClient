@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Runtime.InteropServices;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +25,13 @@ namespace ConstValue
         GameStart // 준비완료
     }
 
+    public enum PacketKindEnum
+    {
+        Transform,
+        Message
+    }
+
+
     static public class ConstValueInfo
     {
         // 접속할 곳의 IP주소.
@@ -37,7 +45,14 @@ namespace ConstValue
 
         public const int BufSizeRecv = 1024;
         public const int BufSizeSend = 1024;
-        public const int ChatBufSize = 128;
+        public const int MessageBufSize = 128;
+        public const int StartPointPacketKind = 0;
+        public const int StartPointProtocol = 0;
+        public const int StartPointDistinguishCode = 4;
+        public const int StartPointTr = 8;
+        public const int StartPointRequestVal = 8;
+        public const int StartPointMessage = 12;
+        public static readonly int[] PacketSizeArray = { (Marshal.SizeOf(typeof(PacketTransform))-4), (Marshal.SizeOf(typeof(PacketMessage))-4)}; // PacketKindEnum과 순서 맞추어야 함.
     }
 
     static public class RequestCollection

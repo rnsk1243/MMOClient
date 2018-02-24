@@ -30,7 +30,7 @@ public class CState
     public bool IsCurConnectState(StateConnect state)
     {
         if(mStateConnect == state)
-        {
+        { 
             return true;
         }else
         {

@@ -10,11 +10,12 @@ public class InitGame : MonoBehaviour {
     CListener mListener;
     CSender mSender;
     CInitDistinguishCode mInitDisCode;
+    PacketTransform ptr;
     // Use this for initialization
     void Awake()
     {
         mState = CState.GetInstance();
-        InitializeGame();
+        //InitializeGame();
         //mConnet = CConnect.GetInstance();
         //mListener = CListener.GetInstance();
         //mSender = CSender.GetInstance();
@@ -30,6 +31,7 @@ public class InitGame : MonoBehaviour {
         //MyTransform tr = new MyTransform(pos, rot, sca);
         //DataPacketInfo testSendData = new DataPacketInfo((int)ProtocolInfo.Tr, tr, "abc");
         //mSender.Sendn(ref testSendData);
+
     }
 
     IEnumerator InitStart()
@@ -38,7 +40,7 @@ public class InitGame : MonoBehaviour {
         while(true)
         {
             InitializeGame();
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(1.0f);
         }
     }
 
@@ -58,7 +60,14 @@ public class InitGame : MonoBehaviour {
                 mInitDisCode.GetMyDisCode();
                 break;
             case StateConnect.AddComponent:
-                Debug.Log("AddComponent State");
+                MyVector3 pos = new MyVector3(1.177f, 1.2f, 1.3f);
+                MyVector3 rot = new MyVector3(2.1f, 2.2f, 2.3f);
+                MyVector3 sca = new MyVector3(3.1f, 3.2f, 3.3f);
+                MyTransform tr = new MyTransform(pos, rot, sca);
+                ptr = new PacketTransform((int)ProtocolInfo.Tr, mInitDisCode.mMyDistinguishCode, tr);
+                Debug.Log("ptr.DistinguishCode = " + ptr.DistinguishCode);
+                mSender.Sendn(ptr, PacketKindEnum.Transform);
+                //Debug.Log("AddComponent State");
                 break;
             case StateConnect.GameStart:
                 break;

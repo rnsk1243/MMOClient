@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using UnityEngine;
 using System;
+using ConstValue;
 
 public class CSender {
 
@@ -24,12 +25,14 @@ public class CSender {
         return mInstance;
     }
 
-    public void Sendn(ref DataPacketInfo dataPacket)
+    public void Sendn(object dataPacket, PacketKindEnum packetKind)
     {
         try
         {
-          //  Debug.Log("//Sendn = " + dataPacket.InfoProtocol);
-            byte[] dataBuffer = dataPacket.Serialize();
+           // PacketMessage m = (PacketMessage)dataPacket;
+           // Debug.Log("//// Sendn = " + m.Message);
+            byte[] dataBuffer = Util.Serialize(packetKind, dataPacket);
+            //Debug.Log("보내는 사이즈 : ");
             stream.Write(dataBuffer, 0, dataBuffer.Length);
         }
         catch (Exception e)

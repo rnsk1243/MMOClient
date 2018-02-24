@@ -14,13 +14,13 @@ public class CListener
     private Thread mThreadListen;
     private NetworkStream mStream;
     private CConnect mConnect;
-    private Queue<MyTransform> mTrQueue;
+    private Queue<PacketTransform> mTrQueue;
     private Dictionary<string, int> mCommandValue;
     ///
 
     private CListener()
     {
-        mTrQueue = new Queue<MyTransform>();
+        mTrQueue = new Queue<PacketTransform>();
         mCommandValue = new Dictionary<string, int>();
         mConnect = CConnect.GetInstance();
         mStream = mConnect.GetStream();
@@ -92,9 +92,23 @@ public class CListener
                     //TerminaterThread();
                     return;
                 }
+                byte[] packetKindBuffer = new byte[4]; // 패킷 종류를 받을 버퍼
+                byte[] dataBuffer = new byte[ConstValueInfo.BufSizeRecv]; // 데이터를 받을 버퍼
 
-                byte[] dataBuffer = new byte[ConstValueInfo.BufSizeRecv];
-                int goalSize = Marshal.SizeOf(typeof(DataPacketInfo));
+                int packetKind = ConstValueInfo.WrongValue;//Marshal.SizeOf(typeof(DataPacketInfo));
+                int goalSize = ConstValueInfo.WrongValue;
+                mStream.Read(packetKindBuffer, 0, 4); // 일단 어떤 패킷이 왔는지 알기위해 4byte만 잃어서 int packetKind 뽑아냄
+
+                packetKind = Util.DeserializeInt(ref packetKindBuffer, ConstValueInfo.StartPointPacketKind); // 뽑아낸 byte를 int로 변환
+                if (packetKind == ConstValueInfo.WrongValue || packetKind >= ConstValueInfo.PacketSizeArray.Length || packetKind < 0)
+                {
+                    Debug.Log("패킷 받을 종류가 잘못 됨.");
+                    Util.RecvBufferFlush(mConnect.GetSocket());
+                    continue;
+                }
+                Debug.Log("받을 패킷 종류 : " + packetKind);
+                goalSize = ConstValueInfo.PacketSizeArray[packetKind];
+
                 Debug.Log("받을 목표 사이즈 = " + goalSize);
                 int curRecvedSize = 0;
                 while (true)
@@ -102,11 +116,12 @@ public class CListener
                     curRecvedSize += mStream.Read(dataBuffer, 0, goalSize);
                     if (curRecvedSize >= goalSize)
                     {
+                        Util.RecvBufferFlush(mConnect.GetSocket());
                         break;
                     }
                 }
-                DataPacketInfo dataPacket = new DataPacketInfo();
-                dataPacket.DeserializeData(ref dataBuffer);
+                object obj = Util.DeserializeData(ref dataBuffer, packetKind);
+                
                 //System.Text.Encoding utf8 = System.Text.Encoding.UTF8;
 
                 //byte[] utf8Bytes = utf8.GetBytes(mMessage.Message);
@@ -115,40 +130,59 @@ public class CListener
                 //byte[] byteFromStr = System.Text.Encoding.Unicode.GetBytes(mMessage.Message);
                 //string result = System.Text.Encoding.Unicode.GetString(byteFromStr);
 
-                DataCategorize(ref dataPacket);
+                DataCategorize(ref obj, packetKind);
                 Thread.Sleep(100);
             }
             catch (Exception e)
             {
                 Debug.Log(e.Message);
-                Debug.Log("에러 리슨함수 종료..");
-                return;
+                Debug.Log("에러 리슨함수..");
                 //mThreadListen.Abort();
             }
         }
     }
 
-    // 여기서는 CheckState.ChangeSceneState만 하고 CheckState.ChangeState(스테이트 변경)은 CheckState에서 할 것.
-    void DataCategorize(ref DataPacketInfo dataPacket)
+    void DataCategorize(ref object dataPacket, int packetKind)
     {
-        switch (dataPacket.InfoProtocol)
+        switch(packetKind)
         {
-            case (int)ProtocolInfo.Request:
-                mCommandValue.Add(dataPacket.ChatMessage, dataPacket.RequestVal);
+            case (int)PacketKindEnum.Transform:
+                PacketTransform tr = (PacketTransform)dataPacket;
+                Debug.Log("받은 tr.position.x = " + tr.Tr.Position.x);
+                mTrQueue.Enqueue(tr);
                 break;
-            case (int)ProtocolInfo.Tr:
-                mTrQueue.Enqueue(dataPacket.Tr);
-                Debug.Log("받은 Tr : " + dataPacket.Tr.Position.x);
-                Debug.Log("받은 Tr : " + dataPacket.Tr.Rotation.x);
-                Debug.Log("받은 Tr : " + dataPacket.Tr.Scale.x);
-                break;
-            case (int)ProtocolInfo.Chat:
-                Debug.Log("받은 Message : " + dataPacket.ChatMessage);
+            case (int)PacketKindEnum.Message:
+                PacketMessage message = (PacketMessage)dataPacket;
+                Debug.Log("New message.Message = " + message.Message);
+                Debug.Log("New message.RequestVal = " + message.RequestVal);
+                if(message.InfoProtocol == (int)ProtocolInfo.Request)
+                {
+                    mCommandValue.Add(message.Message, message.RequestVal);
+                }
                 break;
             default:
-                Debug.Log("분류 할 수 없는 enum ProtocolInfo에 등록 되어 있지 않음 = " + (int)ProtocolInfo.None);
+                Debug.Log("분류 할 수 없는 DataPacket");
                 break;
         }
+        
+        //switch (dataPacket.InfoProtocol)
+        //{
+        //    case (int)ProtocolInfo.Request:
+        //        mCommandValue.Add(dataPacket.ChatMessage, dataPacket.RequestVal);
+        //        break;
+        //    case (int)ProtocolInfo.Tr:
+        //        mTrQueue.Enqueue(dataPacket.Tr);
+        //        Debug.Log("받은 Tr : " + dataPacket.Tr.Position.x);
+        //        Debug.Log("받은 Tr : " + dataPacket.Tr.Rotation.x);
+        //        Debug.Log("받은 Tr : " + dataPacket.Tr.Scale.x);
+        //        break;
+        //    case (int)ProtocolInfo.Chat:
+        //        Debug.Log("받은 Message : " + dataPacket.ChatMessage);
+        //        break;
+        //    default:
+        //        Debug.Log("분류 할 수 없는 enum ProtocolInfo에 등록 되어 있지 않음 = " + (int)ProtocolInfo.None);
+        //        break;
+        //}
     }
 
 }
