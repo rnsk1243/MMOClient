@@ -63,7 +63,7 @@ public class CSender {
                     Packet targetSendData = mSendQueue.Dequeue();
                     // PacketMessage m = (PacketMessage)dataPacket;
                     // Debug.Log("//// Sendn = " + m.Message);
-                    byte[] dataBuffer = Util.Serialize(targetSendData.PacketKind, targetSendData.DataPacket);
+                    byte[] dataBuffer = CUtil.Serialize(targetSendData.PacketKind, targetSendData.DataPacket);
                     //Debug.Log("보내는 사이즈 : ");
                     stream.Write(dataBuffer, 0, dataBuffer.Length);
                 }

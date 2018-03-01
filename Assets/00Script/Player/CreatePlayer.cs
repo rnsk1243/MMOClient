@@ -29,9 +29,10 @@ public class CreatePlayer : MonoBehaviour {
         {
             if(mState.GetConnectState() >= ConstValue.StateConnect.CreateCharacter)
             {
+                mTakeTransform.DistinguishCode = ConstValueInfo.WrongValue;
                 mListener.GetNewClientTransform(ref mTakeTransform);
                 int newPlayerDisCode = mTakeTransform.DistinguishCode;
-                Debug.Log("도전 = " + newPlayerDisCode + " // 이미 만들어 짐 = " + mPlayerManager.IsMakeAlready(newPlayerDisCode));
+                //Debug.Log("도전 = " + newPlayerDisCode + " // 이미 만들어 짐 = " + mPlayerManager.IsMakeAlready(newPlayerDisCode));
                 if (newPlayerDisCode != ConstValueInfo.WrongValue && (mPlayerManager.IsMakeAlready(newPlayerDisCode) == false))
                 {
                     Debug.Log("만든다. = " + newPlayerDisCode);
@@ -44,11 +45,10 @@ public class CreatePlayer : MonoBehaviour {
                     {
                         gameObj = Instantiate(mInitGame.mOtherPlayer);
                     }
-                    gameObj.GetComponent<Transform>().position = Util.ConvertToVector3(ref mTakeTransform.Tr.Position);
-                    gameObj.GetComponent<Transform>().rotation = Quaternion.Euler(Util.ConvertToVector3(ref mTakeTransform.Tr.Rotation));
-                    //gameObj.GetComponent<Transform>().localScale = Util.ConvertToVector3(ref mTakeTransform.Tr.Scale);
+                    gameObj.GetComponent<Transform>().position = CUtil.ConvertToVector3(ref mTakeTransform.Tr.Position);
+                    gameObj.GetComponent<Transform>().rotation = Quaternion.Euler(CUtil.ConvertToVector3(ref mTakeTransform.Tr.Rotation));
+                    //gameObj.GetComponent<Transform>().localScale = CUtil.ConvertToVector3(ref mTakeTransform.Tr.Scale);
                     mPlayerManager.AddPlayer(newPlayerDisCode, gameObj);
-                    mTakeTransform.DistinguishCode = ConstValueInfo.WrongValue;
                 }
             }
             yield return new WaitForSeconds(0.3f);

@@ -114,12 +114,12 @@ public class CListener
                 int goalSize = ConstValueInfo.WrongValue;
                 mStream.Read(packetKindBuffer, 0, 4); // 일단 어떤 패킷이 왔는지 알기위해 4byte만 잃어서 int packetKind 뽑아냄
                 Debug.Log("NewLink___3");
-                packetKind = Util.DeserializeInt(ref packetKindBuffer, ConstValueInfo.StartPointPacketKind); // 뽑아낸 byte를 int로 변환
+                packetKind = CUtil.DeserializeInt(ref packetKindBuffer, ConstValueInfo.StartPointPacketKind); // 뽑아낸 byte를 int로 변환
                 Debug.Log("NewLink___4");
                 if (packetKind == ConstValueInfo.WrongValue || packetKind >= ConstValueInfo.PacketSizeArray.Length || packetKind < 0)
                 {
                     Debug.Log("패킷 받을 종류가 잘못 됨.");
-                    Util.RecvBufferFlush(mConnect.GetSocket());
+                    CUtil.RecvBufferFlush(mConnect.GetSocket());
                     continue;
                 }
                 Debug.Log("NewLink___5");
@@ -136,13 +136,13 @@ public class CListener
                     if (curRecvedSize >= goalSize)
                     {
                         Debug.Log("NewLink___9");
-                        //Util.RecvBufferFlush(mConnect.GetSocket());
+                        //CUtil.RecvBufferFlush(mConnect.GetSocket());
                         break;
                     }
                     Debug.Log("NewLink___10");
                 }
                 Debug.Log("NewLink___11");
-                object obj = Util.DeserializeData(ref dataBuffer, packetKind);
+                object obj = CUtil.DeserializeData(ref dataBuffer, packetKind);
                 Debug.Log("NewLink___12");
                 //System.Text.Encoding utf8 = System.Text.Encoding.UTF8;
 
@@ -155,7 +155,7 @@ public class CListener
                 Debug.Log("NewLink___13");
                 Thread.Sleep(ConstValueInfo.ListenThreadSleep);
                 Debug.Log("NewLink___14");
-                //Util.RecvBufferFlush(mConnect.GetSocket());
+                //CUtil.RecvBufferFlush(mConnect.GetSocket());
             }
             catch (Exception e)
             {

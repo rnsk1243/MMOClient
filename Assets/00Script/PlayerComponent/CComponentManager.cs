@@ -26,7 +26,7 @@ public class CComponentManager {
 
     public System.Type GetSystemType(ComponentEnum index)
     {
-        if(mListComponentType.Count <= (int)index || 0 > (int)index)
+        if((mListComponentType.Count <= (int)index) || (0 > (int)index)) // index out of length 방지
         {
             return null;
         }

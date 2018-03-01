@@ -61,10 +61,13 @@ public class CPlayerManager {
     public void AddGameObjComponent(int disCode, ComponentEnum compIndex)
     {
         System.Type newComptype = mComponentManager.GetSystemType(compIndex);
-        if (IsMakeAlready(mDisCode.GetMyDisCode()) == true && newComptype != null)
+        if (IsMakeAlready(disCode) == true && newComptype != null) // gameObj가 존재하는지 && 컴포넌트를 가져왔는지 확인
         {
             GameObject gameObj = mPlayerDictionary[disCode];
-            gameObj.AddComponent(newComptype);
+            if(gameObj.GetComponent(newComptype) == null) // 이미 추가된 컴포넌트인지 확인
+            {
+                gameObj.AddComponent(newComptype);
+            }
         }
     }
 
