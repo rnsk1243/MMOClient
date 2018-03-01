@@ -202,6 +202,18 @@ public struct PacketMessage
     }
 }
 
+public struct Packet
+{
+    public object DataPacket;
+    public PacketKindEnum PacketKind;
+
+    public Packet(ref object dataPacket, PacketKindEnum packetKind)
+    {
+        DataPacket = dataPacket;
+        PacketKind = packetKind;
+    }
+}
+
 /// </summary>
 
 public class Util
@@ -313,8 +325,23 @@ public class Util
 
     public static void RecvBufferFlush(Socket Sock)
     {
-       // Debug.Log("RecvBuffer 비우기");
         byte[] tempBuf = new byte[ConstValueInfo.BufSizeRecv];
         Sock.Receive(tempBuf);
+    }
+
+    public static void ConvertToTransform(ref Transform target, ref MyTransform source)
+    {
+        Vector3 position = new Vector3(source.Position.x, source.Position.y, source.Position.z);
+        Quaternion rotation = new Quaternion(source.Rotation.x, source.Rotation.y, source.Rotation.z, 0);
+        Vector3 scale = new Vector3(source.Scale.x, source.Scale.y, source.Scale.z);
+
+        target.position = position;
+        target.rotation = rotation;
+        target.localScale = scale;
+    }
+
+    public static Vector3 ConvertToVector3(ref MyVector3 source)
+    {
+        return new Vector3(source.x, source.y, source.z);
     }
 }

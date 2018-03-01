@@ -4,16 +4,35 @@ using System.Net.Sockets;
 using UnityEngine;
 using System;
 using ConstValue;
+using System.Threading;
 
 public class CSender {
 
     private static CSender mInstance;
+    private CConnect mConnect;
     NetworkStream stream;
+    private Queue<Packet> mSendQueue;
+    private Thread mThreadSender;
+
     private CSender()
     {
-        stream = CConnect.GetInstance().GetStream();
+        mConnect = CConnect.GetInstance();
+        stream = mConnect.GetStream();
+        mSendQueue = new Queue<Packet>();
+        mThreadSender = new Thread(new ThreadStart(Sendn));
+        mThreadSender.Start();
+        CState.GetInstance().SetConnectState(StateConnect.DistinguishCode);
     }
 
+    public void TerminaterThread()
+    {
+        //       Debug.Log("TerminaterThread 호출");
+        if (mThreadSender.IsAlive)
+        {
+            //           Debug.Log("mThreadListen 강제 종료 호출");
+            mThreadSender.Abort();
+        }
+    }
 
     public static CSender GetInstance()
     {
@@ -25,20 +44,44 @@ public class CSender {
         return mInstance;
     }
 
-    public void Sendn(object dataPacket, PacketKindEnum packetKind)
+    private void Sendn()
     {
-        try
+        Debug.Log("Send Thread Start!");
+        while(true)
         {
-           // PacketMessage m = (PacketMessage)dataPacket;
-           // Debug.Log("//// Sendn = " + m.Message);
-            byte[] dataBuffer = Util.Serialize(packetKind, dataPacket);
-            //Debug.Log("보내는 사이즈 : ");
-            stream.Write(dataBuffer, 0, dataBuffer.Length);
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
+            try
+            {
+                if (!mConnect.IsConnected())
+                {
+                    Debug.Log("연결 끊김 Sendn함수 종료..");
+                    //mThreadListen.Abort();
+                    //TerminaterThread();
+                    return;
+                }
+                if (mSendQueue.Count != 0)
+                {
+                    Packet targetSendData = mSendQueue.Dequeue();
+                    // PacketMessage m = (PacketMessage)dataPacket;
+                    // Debug.Log("//// Sendn = " + m.Message);
+                    byte[] dataBuffer = Util.Serialize(targetSendData.PacketKind, targetSendData.DataPacket);
+                    //Debug.Log("보내는 사이즈 : ");
+                    stream.Write(dataBuffer, 0, dataBuffer.Length);
+                }
+                Thread.Sleep(ConstValueInfo.SendThreadSleep);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+            }
         }
     }
+
+    public void PushSendData(object dataPacket, PacketKindEnum packetKind)
+    {
+        Packet packet = new Packet(ref dataPacket, packetKind);
+        mSendQueue.Enqueue(packet);
+    }
+
+
 
 }
