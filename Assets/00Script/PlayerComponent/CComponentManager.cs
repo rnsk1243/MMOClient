@@ -12,6 +12,7 @@ public class CComponentManager {
     {
         mListComponentType = new List<System.Type>();
         mListComponentType.Add(typeof(MoveController));
+        mListComponentType.Add(typeof(OtherPlayerMoveController));
         // 다음줄에 다음 컴포넌트 새로 추가.
     }
 

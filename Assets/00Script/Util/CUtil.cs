@@ -139,4 +139,17 @@ public class CUtil {
         return new Vector3(source.x, source.y, source.z);
     }
 
+    public static MyVector3 ConvertGetMyVector(Vector3 source)
+    {
+        return new MyVector3(source.x, source.y, source.z);
+    }
+
+    public static MyTransform ConvertGetMyTransform(ref Transform source)
+    {
+        MyVector3 position = ConvertGetMyVector(source.position);
+        MyVector3 rotation = ConvertGetMyVector(new Vector3(source.rotation.x, source.rotation.y, source.rotation.z));
+        MyVector3 scale = ConvertGetMyVector(source.localScale);
+        return new MyTransform(position, rotation, scale);
+    }
+
 }

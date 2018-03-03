@@ -17,9 +17,6 @@ public class InitGame : MonoBehaviour {
     public GameObject mBasicMyPlayer;
     public GameObject mOtherPlayer;
 
-    private InitGame()
-    { }
-
     // Use this for initialization
     void Awake()
     {
@@ -73,9 +70,9 @@ public class InitGame : MonoBehaviour {
                 //mInitDisCode = CInitDistinguishCode.GetInstance();
                 //mInitDisCode.GetMyDisCode();
                 break;
-            case StateConnect.AddComponent:
-                mPlayerManager = CPlayerManager.GetInstance();
-                mPlayerManager.AddPlayerComponent();
+            //case StateConnect.AddComponent:
+            //    mPlayerManager = CPlayerManager.GetInstance();
+            //    mPlayerManager.AddPlayerComponent();
                 //MyVector3 pos = new MyVector3(1.177f, 1.2f, 1.3f);
                 //MyVector3 rot = new MyVector3(2.1f, 2.2f, 2.3f);
                 //MyVector3 sca = new MyVector3(3.1f, 3.2f, 3.3f);
@@ -84,7 +81,7 @@ public class InitGame : MonoBehaviour {
                 //Debug.Log("ptr.DistinguishCode = " + ptr.DistinguishCode);
                 //mSender.Sendn(ptr, PacketKindEnum.Transform);
                 //Debug.Log("AddComponent State");
-                break;
+            //    break;
             case StateConnect.GameStart:
                 Debug.Log("Game Init 완료!!");
                 break;
@@ -109,6 +106,8 @@ public class InitGame : MonoBehaviour {
         //Debug.Log("readyNetWork null로 초기화 시킴");
         mListener.TerminaterThread();
         mSender.TerminaterThread();
+        //mPlayerManager.TerminaterThread();
+        //mPlayerManager = null;
         mListener = null;
         mSender = null;
         mConnet = null;

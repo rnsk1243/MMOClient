@@ -35,7 +35,8 @@ namespace ConstValue
 
     public enum ComponentEnum
     {
-        MoveController
+        MoveController,
+        OtherMoveController
     }
 
 

@@ -9,25 +9,24 @@ public class CreatePlayer : MonoBehaviour {
     CListener mListener;
     private PacketTransform mTakeTransform;
     CPlayerManager mPlayerManager;
-    //GameObject mBasicPlayerPrefab; // 기본 플레이어 프레임.
     InitGame mInitGame;
+    //GameObject mBasicPlayerPrefab; // 기본 플레이어 프레임.
 
     private void Awake()
     {
-        //mBasicPlayerPrefab = Resources.Load("Character/Player") as GameObject;
         mInitGame = GetComponent<InitGame>();
         mState = CState.GetInstance();
         mListener = CListener.GetInstance();
-        mPlayerManager = CPlayerManager.GetInstance();
+        mPlayerManager = gameObject.AddComponent<CPlayerManager>();
         StartCoroutine(CreatePlayerStart());
-        mState.SetConnectState(ConstValue.StateConnect.AddComponent);
+        mState.SetConnectState(StateConnect.GameStart);
     }
 
     IEnumerator CreatePlayerStart()
     {
         while(true)
         {
-            if(mState.GetConnectState() >= ConstValue.StateConnect.CreateCharacter)
+            if(mState.GetConnectState() >= StateConnect.CreateCharacter)
             {
                 mTakeTransform.DistinguishCode = ConstValueInfo.WrongValue;
                 mListener.GetNewClientTransform(ref mTakeTransform);
@@ -40,10 +39,12 @@ public class CreatePlayer : MonoBehaviour {
                     if (newPlayerDisCode == CInitDistinguishCode.GetInstance().GetMyDisCode())
                     {
                         gameObj = Instantiate(mInitGame.mBasicMyPlayer);
+                        gameObj.AddComponent<MoveController>();
                     }
                     else
                     {
                         gameObj = Instantiate(mInitGame.mOtherPlayer);
+                        gameObj.AddComponent<OtherPlayerMoveController>();
                     }
                     gameObj.GetComponent<Transform>().position = CUtil.ConvertToVector3(ref mTakeTransform.Tr.Position);
                     gameObj.GetComponent<Transform>().rotation = Quaternion.Euler(CUtil.ConvertToVector3(ref mTakeTransform.Tr.Rotation));
