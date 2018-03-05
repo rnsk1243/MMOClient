@@ -67,9 +67,9 @@ public class CUtil {
         //packetKind = DeserializeInt(ref data, ConstValueInfo.StartPointPacketKind);
         int protocolInfo = DeserializeInt(ref data, ConstValueInfo.StartPointProtocol);
         int distinguishCode = DeserializeInt(ref data, ConstValueInfo.StartPointDistinguishCode);
-        Debug.Log("-packetKind = " + packetKind);
-        Debug.Log("-protocolInfo = " + protocolInfo);
-        Debug.Log("-distinguishCode = " + distinguishCode);
+        //Debug.Log("-packetKind = " + packetKind);
+        //Debug.Log("-protocolInfo = " + protocolInfo);
+        //Debug.Log("-distinguishCode = " + distinguishCode);
         switch (packetKind)
         {
             case (int)PacketKindEnum.Transform:
@@ -78,8 +78,8 @@ public class CUtil {
             case (int)PacketKindEnum.Message:
                 int requestVal = DeserializeInt(ref data, ConstValueInfo.StartPointRequestVal);
                 string message = DeserializeMessage(ref data, ConstValueInfo.StartPointMessage);
-                Debug.Log("requestVal = " + requestVal);
-                Debug.Log("message = " + message);
+                //Debug.Log("requestVal = " + requestVal);
+                //Debug.Log("message = " + message);
                 return new PacketMessage(protocolInfo, distinguishCode, requestVal, message);
             default:
                 return null;
@@ -147,7 +147,7 @@ public class CUtil {
     public static MyTransform ConvertGetMyTransform(ref Transform source)
     {
         MyVector3 position = ConvertGetMyVector(source.position);
-        MyVector3 rotation = ConvertGetMyVector(new Vector3(source.rotation.x, source.rotation.y, source.rotation.z));
+        MyVector3 rotation = ConvertGetMyVector(source.eulerAngles); //ConvertGetMyVector(new Vector3(source.rotation.x, source.rotation.y, source.rotation.z));
         MyVector3 scale = ConvertGetMyVector(source.localScale);
         return new MyTransform(position, rotation, scale);
     }

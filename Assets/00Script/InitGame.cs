@@ -83,7 +83,7 @@ public class InitGame : MonoBehaviour {
                 //Debug.Log("AddComponent State");
             //    break;
             case StateConnect.GameStart:
-                Debug.Log("Game Init 완료!!");
+                //Debug.Log("Game Init 완료!!");
                 break;
             default:
                 break;

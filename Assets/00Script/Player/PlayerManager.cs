@@ -100,7 +100,8 @@ public class CPlayerManager : MonoBehaviour {
                         OtherPlayerMoveController OPMC = gameObj.GetComponent<OtherPlayerMoveController>();
                         if (OPMC != null)
                         {
-                            OPMC.Move(ref mTakePacketTransform.Tr.Position);
+                            OPMC.MovePositionUpdate(ref mTakePacketTransform.Tr.Position);
+                            OPMC.MoveRotateUpdate(ref mTakePacketTransform.Tr.Rotation);
                         }
                     }
                 }
