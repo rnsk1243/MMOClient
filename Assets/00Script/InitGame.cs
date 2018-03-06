@@ -10,9 +10,7 @@ public class InitGame : MonoBehaviour {
     CListener mListener;
     CSender mSender;
     CInitDistinguishCode mInitDisCode;
-    CreatePlayer mCreatePlayer;
-    CPlayerManager mPlayerManager;
-    PacketTransform ptr;
+    PlayerManager mPlayerManager;
 
     public GameObject mBasicMyPlayer;
     public GameObject mOtherPlayer;
@@ -30,6 +28,7 @@ public class InitGame : MonoBehaviour {
     private void Start()
     {
         StartCoroutine(InitStart());
+
         //       mState.SetConnectState(StateConnect.DistinguishCode);
         //MyVector3 pos = new MyVector3(1.1f, 1.2f, 1.3f);
         //MyVector3 rot = new MyVector3(2.1f, 2.2f, 2.3f);
@@ -66,21 +65,24 @@ public class InitGame : MonoBehaviour {
                 mInitDisCode.RequestMyDisCode();
                 break;
             case StateConnect.CreateCharacter:
-                mCreatePlayer = gameObject.AddComponent<CreatePlayer>();
+                if(gameObject.GetComponent<PlayerManager>() == null)
+                {
+                    mPlayerManager = gameObject.AddComponent<PlayerManager>();
+                }
                 //mInitDisCode = CInitDistinguishCode.GetInstance();
                 //mInitDisCode.GetMyDisCode();
                 break;
             //case StateConnect.AddComponent:
             //    mPlayerManager = CPlayerManager.GetInstance();
             //    mPlayerManager.AddPlayerComponent();
-                //MyVector3 pos = new MyVector3(1.177f, 1.2f, 1.3f);
-                //MyVector3 rot = new MyVector3(2.1f, 2.2f, 2.3f);
-                //MyVector3 sca = new MyVector3(3.1f, 3.2f, 3.3f);
-                //MyTransform tr = new MyTransform(pos, rot, sca);
-                //ptr = new PacketTransform((int)ProtocolInfo.Tr, mInitDisCode.mMyDistinguishCode, tr);
-                //Debug.Log("ptr.DistinguishCode = " + ptr.DistinguishCode);
-                //mSender.Sendn(ptr, PacketKindEnum.Transform);
-                //Debug.Log("AddComponent State");
+            //MyVector3 pos = new MyVector3(1.177f, 1.2f, 1.3f);
+            //MyVector3 rot = new MyVector3(2.1f, 2.2f, 2.3f);
+            //MyVector3 sca = new MyVector3(3.1f, 3.2f, 3.3f);
+            //MyTransform tr = new MyTransform(pos, rot, sca);
+            //ptr = new PacketTransform((int)ProtocolInfo.Tr, mInitDisCode.mMyDistinguishCode, tr);
+            //Debug.Log("ptr.DistinguishCode = " + ptr.DistinguishCode);
+            //mSender.Sendn(ptr, PacketKindEnum.Transform);
+            //Debug.Log("AddComponent State");
             //    break;
             case StateConnect.GameStart:
                 //Debug.Log("Game Init 완료!!");
@@ -88,12 +90,6 @@ public class InitGame : MonoBehaviour {
             default:
                 break;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     private void OnApplicationQuit()

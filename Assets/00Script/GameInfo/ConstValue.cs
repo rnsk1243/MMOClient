@@ -12,7 +12,8 @@ namespace ConstValue
         Request,
         Tr,
         Chat,
-        NewLink // Area에 들어온 Link
+        NewLink, // Area에 들어온 Link
+        DeleteObj
     }
 
     public enum StateConnect
@@ -23,14 +24,15 @@ namespace ConstValue
         CreateCharacter,
         //SendMyCharacter, // 내가 할 캐릭 정하여 서버에 보내는 중
         //RecvCharacter, // 서버로부터 어떤 캐릭터 생성해야하는지 받는 중
-        AddComponent, // 내 캐릭터에 필요한 컴포턴트 붙임.
+        //AddComponent, // 내 캐릭터에 필요한 컴포턴트 붙임.
         GameStart // 준비완료
     }
 
     public enum PacketKindEnum
     {
         Transform,
-        Message
+        Message,
+        DeleteObj
     }
 
     public enum ComponentEnum
@@ -56,13 +58,21 @@ namespace ConstValue
         public const int BufSizeRecv = 1024;
         public const int BufSizeSend = 1024;
         public const int MessageBufSize = 128;
+        public const int SendEraseObjArraySize = 10;
+        //public const int DeleteObjBufsize = (SendEraseObjArraySize * 4);
         public const int StartPointPacketKind = 0;
         public const int StartPointProtocol = 0;
         public const int StartPointDistinguishCode = 4; // 전체 받은 바이트중에 인덱스 [4]부터 디시리얼 할 것임.
         public const int StartPointTr = 8;
         public const int StartPointRequestVal = 8;
         public const int StartPointMessage = 12;
-        public static readonly int[] PacketSizeArray = { (Marshal.SizeOf(typeof(PacketTransform))-4), (Marshal.SizeOf(typeof(PacketMessage))-4)}; // PacketKindEnum과 순서 맞추어야 함.
+        public const int StartPointDeleteObj = 8;
+        public static readonly int[] PacketSizeArray = 
+            {
+                (Marshal.SizeOf(typeof(PacketTransform))-4), // 4 빼는 이유는 Packet종류 알아보기 위해 int 만큼 읽었기 때문
+                (Marshal.SizeOf(typeof(PacketMessage))-4),
+                (Marshal.SizeOf(typeof(PacketDeleteObj))-4)
+            }; // PacketKindEnum과 순서 맞추어야 함.
 
         public const float SpeedMove = 10.0f;
         public const float SpeedRot = 100.0f;

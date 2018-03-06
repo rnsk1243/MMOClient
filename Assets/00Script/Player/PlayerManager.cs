@@ -5,31 +5,39 @@ using ConstValue;
 using System;
 using System.Threading;
 
-public class CPlayerManager : MonoBehaviour {
+public class PlayerManager : MonoBehaviour {
 
-    static private CPlayerManager mInstance;
-    private Dictionary<int, GameObject> mPlayerDictionary;
+    static private PlayerManager mInstance;
+    private CState mState;
     private CInitDistinguishCode mDisCode;
     private CComponentManager mComponentManager;
     private CListener mListener;
+    private CreatePlayer mCreatePlayerComponent;
+    private DeletePlayer mDeletePlayerComponent;
+    private Dictionary<int, GameObject> mPlayerDictionary;
     //private Thread mThreadOtherPlayerMove;
 
     private PacketTransform mTakePacketTransform;
-    private CState mState;
     // private GameObject mTakeGameObj;
 
     private void Awake()
     {
         Debug.Log("CPlayerManager 만듬");
         mState = CState.GetInstance();
-        mPlayerDictionary = new Dictionary<int, GameObject>();
+        mListener = CListener.GetInstance();
         mDisCode = CInitDistinguishCode.GetInstance();
         mComponentManager = CComponentManager.GetInstance();
-        mListener = CListener.GetInstance();
-        //mThreadOtherPlayerMove = new Thread(new ThreadStart(OtherPlayerMove));
-        //mThreadOtherPlayerMove.Start();
-        mTakePacketTransform = new PacketTransform();
+        mCreatePlayerComponent = gameObject.AddComponent<CreatePlayer>();
+        mDeletePlayerComponent = gameObject.AddComponent<DeletePlayer>();
+        mPlayerDictionary = new Dictionary<int, GameObject>();
+        StartCoroutine(CreatePlayerStart());
+        StartCoroutine(DeletePlayerStart());
         StartCoroutine(OtherPlayerMove());
+    }
+
+    private void Start()
+    {
+        //mState.SetConnectState(StateConnect.GameStart);
     }
 
     //public void TerminaterThread()
@@ -83,6 +91,35 @@ public class CPlayerManager : MonoBehaviour {
             {
                 gameObj.AddComponent(newComptype);
             }
+        }
+    }
+
+    public void DeletePlayerObj(int disCode)
+    {
+        if (IsMakeAlready(disCode) == true)
+        {
+            GameObject deleteObj = mPlayerDictionary[disCode];
+            mPlayerDictionary.Remove(disCode);
+            Destroy(deleteObj);
+            Debug.Log(disCode + " 번 삭제");
+        }
+    }
+
+    IEnumerator CreatePlayerStart()
+    {
+        while (true)
+        {
+            mCreatePlayerComponent.CreateCharacter(this);
+            yield return new WaitForSeconds(0.3f);
+        }
+    }
+
+    IEnumerator DeletePlayerStart()
+    {
+        while(true)
+        {
+            mDeletePlayerComponent.DeleteCharacter(this);
+            yield return new WaitForSeconds(0.3f);
         }
     }
 

@@ -40,7 +40,7 @@ public class OtherPlayerMoveController : MonoBehaviour {
         if (remainDirectionSize > 0.1f)
         {
             Vector3 directionNormal = directionVector.normalized;
-            mTr.Translate(directionNormal * Time.deltaTime * ConstValueInfo.SpeedMove, Space.World);
+            mTr.Translate(directionNormal * Time.deltaTime * ConstValueInfo.SpeedMove, Space.World); // 必ずSpace.Worldで使うこと。
             //Debug.Log("이동중");
         }
         else

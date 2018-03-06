@@ -81,6 +81,10 @@ public class CUtil {
                 //Debug.Log("requestVal = " + requestVal);
                 //Debug.Log("message = " + message);
                 return new PacketMessage(protocolInfo, distinguishCode, requestVal, message);
+            case (int)PacketKindEnum.DeleteObj:
+                PacketDeleteObj packetDeleteObj = new PacketDeleteObj(protocolInfo, distinguishCode);
+                packetDeleteObj.EraseObjDiscodeArray = DeserializeIntArray(ref data, ConstValueInfo.StartPointDeleteObj, ConstValueInfo.SendEraseObjArraySize);
+                return packetDeleteObj;
             default:
                 return null;
         }
@@ -116,6 +120,22 @@ public class CUtil {
         string chat = Encoding.Default.GetString(data, startPoint, ConstValueInfo.MessageBufSize);
         return RemoveNullString(ref chat);
     }
+
+    public static int[] DeserializeIntArray(ref byte[] data, int startPoint, int arraySize)
+    {
+        int[] tempArray = new int[arraySize];
+        int point = startPoint;
+        for(int i=0; i<arraySize; i++)
+        {
+            tempArray[i] = BitConverter.ToInt32(data, point);
+            Debug.Log("Deserialize tempArray[" + i + "] = " + tempArray[i]);
+            point += 4;
+        }
+        return tempArray;
+    }
+
+    /////////////////////////////////////////////////////////
+
 
     public static void RecvBufferFlush(Socket Sock)
     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ConstValue;
+using System.Runtime.InteropServices;
 
 public class MoveTest : MonoBehaviour {
 
@@ -14,6 +15,8 @@ public class MoveTest : MonoBehaviour {
         mTr = GetComponent<Transform>();
         mNewPosition = new Vector3();
         //mNewRotate = mTr.eulerAngles;
+        int siz = (Marshal.SizeOf(typeof(PacketDeleteObj)) - 4);
+        Debug.Log("dd = " + siz);
     }
 	
 	// Update is called once per frame
