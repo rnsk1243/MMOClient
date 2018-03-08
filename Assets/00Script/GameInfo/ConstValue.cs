@@ -58,7 +58,7 @@ namespace ConstValue
         public const int BufSizeRecv = 1024;
         public const int BufSizeSend = 1024;
         public const int MessageBufSize = 128;
-        public const int SendEraseObjArraySize = 10;
+        public const int SendEraseObjArraySize = 3;
         //public const int DeleteObjBufsize = (SendEraseObjArraySize * 4);
         public const int StartPointPacketKind = 0;
         public const int StartPointProtocol = 0;

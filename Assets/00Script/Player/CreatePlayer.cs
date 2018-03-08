@@ -41,7 +41,9 @@ public class CreatePlayer : MonoBehaviour {
                     else
                     {
                         gameObj = Instantiate(mInitGame.mOtherPlayer);
-                        gameObj.AddComponent<OtherPlayerMoveController>();
+                        OtherPlayerMoveController opmc = gameObj.AddComponent<OtherPlayerMoveController>();
+                        opmc.MovePositionUpdate(ref mTakeTransform.Tr.Position);
+                        opmc.MoveRotateUpdate(ref mTakeTransform.Tr.Rotation);
                     }
                     //Debug.Log("생성 위치 = " + mTakeTransform.Tr.Position.x);
                     gameObj.GetComponent<Transform>().position = CUtil.ConvertToVector3(ref mTakeTransform.Tr.Position);

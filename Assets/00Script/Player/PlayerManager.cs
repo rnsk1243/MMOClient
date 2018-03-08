@@ -146,26 +146,4 @@ public class PlayerManager : MonoBehaviour {
             yield return new WaitForSeconds(0.1f);
         }
     }
-
-    //private void OtherPlayerMove()
-    //{
-    //    while(true)
-    //    {
-    //        if(mState.IsCurConnectState(StateConnect.GameStart))
-    //        {
-    //            if (mListener.GetTrMessage(ref mTakePacketTransform))
-    //            {
-    //                if (IsMakeAlready(mTakePacketTransform.DistinguishCode) == true)
-    //                {
-    //                    GameObject gameObj = mPlayerDictionary[mTakePacketTransform.DistinguishCode];
-    //                    OtherPlayerMoveController OPMC = gameObj.GetComponent<OtherPlayerMoveController>();
-    //                    if (OPMC != null)
-    //                    {
-    //                        OPMC.Move(ref mTakePacketTransform.Tr.Position);
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
 }

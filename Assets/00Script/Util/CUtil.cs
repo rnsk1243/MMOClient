@@ -86,6 +86,7 @@ public class CUtil {
                 packetDeleteObj.EraseObjDiscodeArray = DeserializeIntArray(ref data, ConstValueInfo.StartPointDeleteObj, ConstValueInfo.SendEraseObjArraySize);
                 return packetDeleteObj;
             default:
+                Debug.Log("분류 할 수 없는 패킷 종류 =" + packetKind);
                 return null;
         }
     }
