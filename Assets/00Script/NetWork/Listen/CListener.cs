@@ -47,10 +47,10 @@ public class CListener
 
     public void TerminaterThread()
     {
-        //       Debug.Log("TerminaterThread 호출");
+               Debug.Log("TerminaterThread 호출");
         if (mThreadListen.IsAlive)
         {
-            //           Debug.Log("mThreadListen 강제 종료 호출");
+               Debug.Log("mThreadListen 강제 종료 호출");
             mThreadListen.Abort();
         }
     }
@@ -111,7 +111,7 @@ public class CListener
         //Debug.Log("mDeletePacketQueue.Count = " + mDeletePacketQueue.Count);
         if (0 != mDeletePacketQueue.Count)
         {
-            Debug.Log("GetDeleteObj");
+           //Debug.Log("GetDeleteObj");
             target = mDeletePacketQueue.Dequeue();
             return true;
         }
@@ -247,6 +247,11 @@ public class CListener
         switch(protocol)
         {
             case (int)ProtocolInfo.Request:
+                if(mTakeMessage.Message == RequestCollection.SendDistinguishCode)
+                {
+                    mState.mCurAreaNumber = mTakeMessage.DistinguishCode;
+                    Debug.Log("나의 현재 Area = " + mState.mCurAreaNumber);
+                }
                 mCommandValue.Add(mTakeMessage.Message, mTakeMessage.RequestVal);
                 mTakeMessage.InfoProtocol = ConstValueInfo.WrongValue;
                 break;

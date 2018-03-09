@@ -101,7 +101,7 @@ public class PlayerManager : MonoBehaviour {
             GameObject deleteObj = mPlayerDictionary[disCode];
             mPlayerDictionary.Remove(disCode);
             Destroy(deleteObj);
-            Debug.Log(disCode + " 번 삭제");
+           // Debug.Log(disCode + " 번 삭제");
         }
     }
 

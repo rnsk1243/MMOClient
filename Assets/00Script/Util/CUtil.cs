@@ -129,7 +129,7 @@ public class CUtil {
         for(int i=0; i<arraySize; i++)
         {
             tempArray[i] = BitConverter.ToInt32(data, point);
-            Debug.Log("Deserialize tempArray[" + i + "] = " + tempArray[i]);
+            //Debug.Log("Deserialize tempArray[" + i + "] = " + tempArray[i]);
             point += 4;
         }
         return tempArray;

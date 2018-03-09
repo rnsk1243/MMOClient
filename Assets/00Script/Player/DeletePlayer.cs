@@ -7,7 +7,6 @@ public class DeletePlayer : MonoBehaviour {
 
     private CState mState;
     private CListener mListener;
-    private PacketDeleteObj mTakeDeleteObjPacket;
 
     // Use this for initialization
     private void Awake()
@@ -20,14 +19,18 @@ public class DeletePlayer : MonoBehaviour {
     {
         if(mState.IsCurConnectState(StateConnect.GameStart))
         {
+            PacketDeleteObj takeDeleteObjPacket = new PacketDeleteObj();
             //mTakeDeleteObjPacket.DistinguishCode = ConstValueInfo.WrongValue;
-            if(mListener.GetDeleteObj(ref mTakeDeleteObjPacket))
+            if (mListener.GetDeleteObj(ref takeDeleteObjPacket))
             {
-                int[] eraseArray = mTakeDeleteObjPacket.EraseObjDiscodeArray;
-                Debug.Log("!!!! 지울 배열 크기 : " + eraseArray.Length);
+                int[] eraseArray = takeDeleteObjPacket.EraseObjDiscodeArray;
+                //Debug.Log("!!!! 지울 배열 크기 : " + eraseArray.Length);
                 for(int i=0; i<eraseArray.Length; i++)
                 {
-                    playerManager.DeletePlayerObj(eraseArray[i]);
+                    if(eraseArray[i] != CInitDistinguishCode.GetInstance().GetMyDisCode())
+                    {
+                        playerManager.DeletePlayerObj(eraseArray[i]);
+                    }
                 }
             }
         }

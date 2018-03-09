@@ -96,12 +96,13 @@ public class InitGame : MonoBehaviour {
     {
         //DataPacketInfo quitInfo = new DataPacketInfo((int)ProtocolInfo.ExitGameProcess, (int)ProtocolDetail.Message, (int)ProtocolMessageTag.Text, "으악 나 죽네");
         //sender.Sendn(ref quitInfo);
-        //Debug.Log("OnApplicationQuit 호출");
+
+        Debug.Log("OnApplicationQuit 호출");
         mConnet.CloseStream();
         mConnet.CloseClient();
-        //Debug.Log("readyNetWork null로 초기화 시킴");
         mListener.TerminaterThread();
         mSender.TerminaterThread();
+        Debug.Log("readyNetWork null로 초기화 시킴");
         //mPlayerManager.TerminaterThread();
         //mPlayerManager = null;
         mListener = null;

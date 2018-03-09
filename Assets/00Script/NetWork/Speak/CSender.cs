@@ -26,10 +26,10 @@ public class CSender {
 
     public void TerminaterThread()
     {
-        //       Debug.Log("TerminaterThread 호출");
+               Debug.Log("TerminaterThread 호출");
         if (mThreadSender.IsAlive)
         {
-            //           Debug.Log("mThreadListen 강제 종료 호출");
+                       Debug.Log("mThreadListen 강제 종료 호출");
             mThreadSender.Abort();
         }
     }

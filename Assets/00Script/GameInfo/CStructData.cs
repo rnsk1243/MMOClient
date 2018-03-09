@@ -74,7 +74,7 @@ public struct PacketMessage
     public int RequestVal;
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = ConstValueInfo.MessageBufSize)]
     public string Message;
-
+    // protocol, mydistinguishcode, receivedVal(서버로부터 응답받은 결과 or 요청상수_예)이동Area), requestMessage(요청할 메세지)
     public PacketMessage(int infoProtocol, int distinguishCode, int requestVal, string message)
     {
         PacketKind = (int)PacketKindEnum.Message;

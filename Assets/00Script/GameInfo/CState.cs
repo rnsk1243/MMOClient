@@ -7,9 +7,11 @@ public class CState
 {
     StateConnect mStateConnect;
     static CState mInstance;
+    public int mCurAreaNumber;
 
     private CState()
     {
+        mCurAreaNumber = ConstValueInfo.WrongValue;
         mStateConnect = StateConnect.Connecting;
     }
 

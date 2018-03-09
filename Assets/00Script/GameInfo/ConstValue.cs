@@ -58,7 +58,7 @@ namespace ConstValue
         public const int BufSizeRecv = 1024;
         public const int BufSizeSend = 1024;
         public const int MessageBufSize = 128;
-        public const int SendEraseObjArraySize = 3;
+        public const int SendEraseObjArraySize = 1; // 서버의 ErrorLinkLimitAmount값과 반드시 일치 시킬 것.
         //public const int DeleteObjBufsize = (SendEraseObjArraySize * 4);
         public const int StartPointPacketKind = 0;
         public const int StartPointProtocol = 0;
@@ -76,11 +76,14 @@ namespace ConstValue
 
         public const float SpeedMove = 10.0f;
         public const float SpeedRot = 100.0f;
+        public const int MoveAreaSuccessValue = 1; // area이동 성공시 클라이언트에게 보내는 값
     }
 
     static public class RequestCollection
     {
         public const string SendDistinguishCode = "RequestMyDisCode";
+        public const string SendMoveArea = "MoveArea";
+        public const string SendMoveAreaComplete = "MoveAreaComplete";
     }
 }
 
